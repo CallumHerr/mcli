@@ -10,6 +10,9 @@ Command line tool written in Java to easily create NeoForge/Fabric modding templ
 6. Click `New`, should be in the top right, and add the location that you extracted the zip to (what you copied in step 2.
 7. Press ok to close it all and installation should be complete.
 
+### Important notice
+If at any point you move the location of mcli, you will need to update the Path variable to the new location.
+
 ## Usage
 Open the command line in the directory in which you want to create your project.
 Then type `mcli` followed by `neo`/`neoforge` to create a NeoForge project or `fabric` for a Fabric project.
