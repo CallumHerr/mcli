@@ -24,7 +24,7 @@ public class Main {
         if (!args[0].equalsIgnoreCase("fabric")) {
             out("Minecraft version: ");
             String mcVersion =  in.nextLine();
-            String versionReg = "^(\\d+\\.)?(\\d+\\.)?(\\*|\\d+)$";
+            String versionReg = "^(\\d+\\.)(\\d+\\.)(\\*|\\d+)$";
             if (!mcVersion.matches(versionReg)) end("Invalid minecraft version.");
             String neoVersion = VersionHandler.getNeoVersion(mcVersion);
             if (neoVersion == null) end("Could not find valid NeoForge version.");
@@ -84,8 +84,20 @@ public class Main {
 
 
         String main = path + "/src/main/java/" + info.get("mod_group_id")
-                .replace(".", "/") + "/" + info.get("class_name") + ".java";
-        FileHandler.updateMain(info.get("mod_id"), Path.of(main));
+                .replace(".", "/") + "/";
+        FileHandler.updateMain(info, Path.of(main + info.get("class_name") + ".java"));
+        if (args[0].equalsIgnoreCase("fabric")) {
+            FileHandler.updateMain(info,
+                    Path.of(main + "/mixin/ExampleMixin.java"));
+
+            main = path + "/src/client/java/" +
+                    info.get("mod_group_id").replace(".", "/")
+                    + "/";
+            FileHandler.updateMain(info,
+                    Path.of(main + info.get("class_name") + "Client.java"));
+            FileHandler.updateMain(info,
+                    Path.of(main + "mixin/client/" + "ExampleClientMixin.java"));
+        } else FileHandler.updateMain(info, Path.of(main + "Config.java"));
 
         if (args.length > 1 && args[1].equals("open")) {
             Runtime.getRuntime().exec(new String[]{
@@ -96,11 +108,11 @@ public class Main {
     }
 
     private static void out(String s) {
-        System.out.print(s);
+        System.out.print("\u001B[33m" + s + "\u001B[0m");
     }
 
     private static void end(String s) {
-        out(s);
+        out("\u001B[31m" + s + "\u001B[0m");
         System.exit(1);
     }
 }

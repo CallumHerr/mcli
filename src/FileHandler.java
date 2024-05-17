@@ -94,15 +94,18 @@ public class FileHandler {
         Files.writeString(mixinPath, sb.toString());
     }
 
-    public static void updateMain(String modid, Path path) throws IOException {
+    public static void updateMain(Map<String, String> info, Path path) throws IOException {
         StringBuilder sb = new StringBuilder();
 
         for (String line : Files.readAllLines(path)) {
-            if (line.contains("examplemod")) {
-                line = line.replace("examplemod", modid);
-            } else if (line.contains("modid")) {
-                line = line.replace("modid", modid);
-            }
+            if (line.contains("package "))
+                line = "package " + info.get("mod_group_id") + ";";
+            else if (line.contains("examplemod"))
+                line = line.replace("examplemod", info.get("mod_id"));
+            else if (line.contains("ExampleMod"))
+                line = line.replace("ExampleMod", info.get("class_name"));
+            else if (line.contains("\"modid\""))
+                line = line.replace("modid", "mod_id");
 
             sb.append("\n").append(line);
         }
